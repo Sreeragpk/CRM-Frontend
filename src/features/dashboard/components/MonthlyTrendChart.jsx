@@ -1,4 +1,4 @@
-import { formatCurrency, formatIndianNumber } from "../../../constants";
+import {  formatIndianNumber } from "../../../constants";
 
 const MonthlyTrendChart = ({ data }) => {
   if (!data || data.length === 0) {

@@ -21,35 +21,42 @@ const StageChart = ({ data }) => {
       </div>
 
       <div className="space-y-3">
-        {data.map((item) => {
-          const percentage = maxAmount > 0 ? (item.amount / maxAmount) * 100 : 0;
-          const colorClass = STAGE_COLORS[item.stage] || "bg-gray-100 text-gray-800";
-          const bgColor = colorClass.replace("text-", "bg-").split(" ")[0].replace("bg-", "");
+ {data.map((item) => {
+  const percentage = maxAmount > 0 ? (item.amount / maxAmount) * 100 : 0;
 
-          return (
-            <div key={item.stage} className="group">
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <span className={`badge text-[10px] ${colorClass}`}>
-                    {item.count}
-                  </span>
-                  <span className="text-sm text-gray-700">
-                    {formatLabel(item.stage)}
-                  </span>
-                </div>
-                <span className="text-sm font-semibold text-gray-900">
-                  {formatCurrency(item.amount)}
-                </span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-500 bg-${bgColor.replace("-100", "-500")}`}
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
+  const stageColor = STAGE_COLORS[item.stage] || {
+    bg: "bg-gray-50",
+    text: "text-gray-700",
+    dot: "bg-gray-500",
+  };
+
+  return (
+    <div key={item.stage} className="group">
+      <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center gap-2">
+          <span className={`badge text-[10px] ${stageColor.bg} ${stageColor.text}`}>
+            {item.count}
+          </span>
+
+          <span className="text-sm text-gray-700">
+            {formatLabel(item.stage)}
+          </span>
+        </div>
+
+        <span className="text-sm font-semibold text-gray-900">
+          {formatCurrency(item.amount)}
+        </span>
+      </div>
+
+      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all duration-500 ${stageColor.dot}`}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  );
+})}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { formatCurrency, formatDate, formatLabel, STAGE_COLORS } from "../../../constants";
+import { formatCurrency, formatLabel, STAGE_COLORS } from "../../../constants";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 
 const DealsClosingSoon = ({ deals }) => {

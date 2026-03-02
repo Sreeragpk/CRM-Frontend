@@ -1,4 +1,4 @@
-import { formatCurrency, formatLabel, formatIndianNumber } from "../../../constants";
+import {  formatLabel } from "../../../constants";
 
 const COLORS = [
   "bg-blue-500",

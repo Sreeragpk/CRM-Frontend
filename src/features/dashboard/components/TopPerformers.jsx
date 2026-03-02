@@ -1,4 +1,4 @@
-import { formatCurrency, formatIndianNumber } from "../../../constants";
+import {  formatIndianNumber } from "../../../constants";
 import Avatar from "../../../components/Avatar";
 
 const TopPerformers = ({ data }) => {

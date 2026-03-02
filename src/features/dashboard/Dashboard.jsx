@@ -151,7 +151,7 @@ import {
   fetchTopPerformers,
   fetchDealsBySource,
 } from "../analytics/analyticsSlice";
-import { formatCurrency, formatIndianNumber } from "../../constants";
+import { formatIndianNumber } from "../../constants";
 import Spinner from "../../components/Spinner";
 import StatCard from "./components/StatCard";
 import StageChart from "./components/StageChart";

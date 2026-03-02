@@ -73,258 +73,285 @@
 // export default Sidebar;
 // src/components/Sidebar.jsx
 
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logoutUser } from "../features/auth/authSlice"
+// src/components/Sidebar.jsx
+
+import { useState, useEffect, useCallback } from "react";
+import { useSelector } from "react-redux";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Building2,
   Users,
-  DollarSign,
+  IndianRupee,
   CheckSquare,
-  GitBranch,
-  Zap,
-  LogOut,
+  ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react";
-import { useState } from "react";
 
-const navigation = [
-  {
-    name: "Dashboard",
-    to: "/",
-    icon: LayoutDashboard,
-    badge: null,
-  },
-  {
-    name: "Accounts",
-    to: "/accounts",
-    icon: Building2,
-    badge: null,
-  },
-  {
-    name: "Contacts",
-    to: "/contacts",
-    icon: Users,
-    badge: null,
-  },
-  {
-    name: "Deals",
-    to: "/deals",
-    icon: DollarSign,
-    badge: null,
-  },
-  {
-    name: "Tasks",
-    to: "/tasks",
-    icon: CheckSquare,
-    badge: null,
-  },
-  {
-    name: "Pipeline",
-    to: "/deals/pipeline",
-    icon: GitBranch,
-    badge: null,
-  },
-];
-
-const Sidebar = ({ onClose }) => {
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { user } = useSelector((state) => state.auth);
-
-  // Get user initials
-  const getInitials = (name) => {
-    if (!name) return "U";
-    const parts = name.trim().split(" ");
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
-  };
-
-  // Get user role display
-  const getRoleDisplay = (role) => {
-    if (!role) return "User";
-    return role.charAt(0).toUpperCase() + role.slice(1).replace(/_/g, " ");
-  };
-
-  const handleLogout = async () => {
-    await dispatch(logoutUser());
-    navigate("/login");
-  };
+function MenuItem({ item, onNavigate, isMobile = false, collapsed, isActive }) {
+  const active = isActive(item.to);
+  const showCollapsed = collapsed && !isMobile;
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 text-white relative overflow-hidden">
-      {/* Background Glow Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-80 h-80 bg-blue-400/15 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-sky-400/5 rounded-full blur-3xl" />
+    <NavLink to={item.to} onClick={onNavigate} className="block">
+      <div className="relative">
+        {active && !showCollapsed && (
+          <div
+            className="absolute -top-[20px] right-0 w-[20px] h-[20px] pointer-events-none z-10"
+            style={{
+              background:
+                "radial-gradient(circle at top left, transparent 20px, white 20px)",
+            }}
+          />
+        )}
+
+        <div
+          className={`
+            group relative flex items-center
+            ${showCollapsed ? "justify-center mx-2 px-0" : "gap-3 pl-6 pr-4"}
+            py-3 transition-all duration-300 ease-in-out
+            ${
+              active
+                ? showCollapsed
+                  ? "bg-white text-[#3B2E7E] rounded-xl font-semibold shadow-md"
+                  : "bg-white text-[#3B2E7E] rounded-l-full font-semibold shadow-md"
+                : "text-white/80 hover:bg-white/10 hover:text-white"
+            }
+          `}
+        >
+          <item.icon
+            className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${
+              active ? "scale-110" : "group-hover:scale-105"
+            }`}
+          />
+
+          {!showCollapsed && (
+            <span className="text-sm font-medium transition-opacity duration-200">
+              {item.name}
+            </span>
+          )}
+
+          {showCollapsed && (
+            <span className="absolute left-full ml-3 bg-[#2A1F5C] text-white text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 whitespace-nowrap z-[60] pointer-events-none shadow-lg transition-opacity duration-200">
+              {item.name}
+            </span>
+          )}
+        </div>
+
+        {active && !showCollapsed && (
+          <div
+            className="absolute -bottom-[20px] right-0 w-[20px] h-[20px] pointer-events-none z-10"
+            style={{
+              background:
+                "radial-gradient(circle at bottom left, transparent 20px, white 20px)",
+            }}
+          />
+        )}
       </div>
+    </NavLink>
+  );
+}
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col h-full">
-        {/* Logo */}
-        <div className="px-6 pt-7 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-white rounded-xl blur-md opacity-20" />
-              <div className="relative w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/30">
-                <Zap className="w-6 h-6 text-blue-700 fill-blue-100" />
-              </div>
-            </div>
-            <div>
-              <h1 className="text-lg font-extrabold tracking-tight text-white leading-none">
-                SalesCRM
-              </h1>
-              <p className="text-[10px] font-semibold text-blue-200/60 uppercase tracking-[0.2em] mt-0.5">
-                Pro Suite
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Section Label */}
-        <div className="px-6 pb-2">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-200/30">
-            Navigation
-          </span>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
-          {navigation.map((item) => {
-            const isActive =
-              item.to === "/"
-                ? location.pathname === "/"
-                : location.pathname.startsWith(item.to);
-
-            return (
-              <NavLink
-                key={item.name}
-                to={item.to}
-                end={item.to === "/"}
-                onClick={onClose}
-                onMouseEnter={() => setHoveredItem(item.name)}
-                onMouseLeave={() => setHoveredItem(null)}
-                className="relative block"
-              >
-                {/* Active bar */}
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-8 bg-white rounded-r-full shadow-lg shadow-white/30" />
-                )}
-
-                <div
-                  className={`
-                    relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold
-                    transition-all duration-300 ease-out mx-1
-                    ${
-                      isActive
-                        ? "bg-white/15 text-white shadow-lg shadow-blue-900/20 backdrop-blur-sm"
-                        : "text-blue-100/60 hover:text-white hover:bg-white/8"
-                    }
-                  `}
-                >
-                  {/* Icon */}
-                  <div
-                    className={`
-                      flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-300
-                      ${
-                        isActive
-                          ? "bg-white text-blue-700 shadow-md shadow-white/20"
-                          : "bg-white/5 text-blue-200/50"
-                      }
-                    `}
-                  >
-                    <item.icon
-                      className="w-[18px] h-[18px]"
-                      strokeWidth={isActive ? 2.5 : 1.8}
-                    />
-                  </div>
-
-                  {/* Label */}
-                  <span className="flex-1">{item.name}</span>
-
-                  {/* Badge */}
-                  {item.badge && (
-                    <span
-                      className={`
-                        inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-lg text-[10px] font-bold
-                        transition-all duration-300
-                        ${
-                          isActive
-                            ? "bg-white/20 text-white"
-                            : "bg-white/8 text-blue-200/50"
-                        }
-                      `}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-
-                  {/* Arrow */}
-                  <ChevronRight
-                    className={`
-                      w-4 h-4 transition-all duration-300
-                      ${
-                        isActive
-                          ? "text-white/50 opacity-100"
-                          : "opacity-0 -translate-x-2"
-                      }
-                      ${hoveredItem === item.name && !isActive ? "opacity-40 translate-x-0" : ""}
-                    `}
-                  />
-                </div>
-              </NavLink>
-            );
-          })}
-        </nav>
-
-        {/* Separator */}
-        <div className="px-6 py-2">
-          <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-        </div>
-
-        {/* User Profile */}
-        <div className="px-4 py-5">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/8 border border-white/8 hover:bg-white/12 hover:border-white/15 transition-all duration-300 group">
-            {/* Avatar */}
-            <div className="relative flex-shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-300 to-indigo-400 flex items-center justify-center text-sm font-extrabold text-blue-900 shadow-lg shadow-sky-400/20">
-                {getInitials(user?.name)}
-              </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-[2.5px] border-blue-800 shadow-sm" />
-            </div>
-
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-bold text-white truncate leading-tight">
-                {user?.name || "Guest User"}
-              </p>
-              <p className="text-[11px] text-blue-200/40 truncate mt-0.5">
-                {user?.email || getRoleDisplay(user?.role)}
-              </p>
-            </div>
-
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              title="Logout"
-              className="opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
-            >
-              <div className="w-8 h-8 rounded-lg bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors duration-200">
-                <LogOut className="w-4 h-4 text-blue-200/60 hover:text-red-300 transition-colors duration-200" />
-              </div>
-            </button>
-          </div>
-        </div>
+function BrandSection({ isCollapsed }) {
+  return (
+    <div
+      className={`flex items-center ${
+        isCollapsed ? "justify-center" : "gap-3"
+      } px-4 py-6 transition-all duration-300`}
+    >
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100"
+        }`}
+      >
+        <h1 className="font-semibold text-lg whitespace-nowrap">
+          FactEyes CRM
+        </h1>
       </div>
     </div>
   );
-};
+}
 
-export default Sidebar;
+function SidebarContent({
+  menu,
+  isMobile = false,
+  collapsed,
+  setCollapsed,
+  onClose,
+  isActive,
+}) {
+  const isCollapsed = collapsed && !isMobile;
+
+  return (
+    <>
+      <div
+        className={`flex items-center ${
+          isMobile ? "justify-between" : ""
+        } p-2`}
+      >
+        <BrandSection isCollapsed={isCollapsed} />
+        {isMobile && (
+          <button
+            onClick={onClose}
+            className="bg-white/10 p-2 rounded-xl hover:bg-white/20 active:scale-95 transition-all duration-200 flex-shrink-0 mr-2"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        )}
+      </div>
+
+      <div className="mx-3 mb-2 border-t border-white/10" />
+
+      <div className="flex-1 space-y-1 mt-2 overflow-y-auto overflow-x-hidden overscroll-contain">
+        {menu.map((item) => (
+          <MenuItem
+            key={item.name}
+            item={item}
+            isMobile={isMobile}
+            collapsed={collapsed}
+            isActive={isActive}
+            onNavigate={isMobile ? onClose : undefined}
+          />
+        ))}
+      </div>
+
+      {isMobile ? (
+        <div className="p-4 border-t border-white/10">
+          <p className="text-white/40 text-xs text-center">© 2025 SalesCRM</p>
+        </div>
+      ) : (
+        <div className="flex justify-center py-4 border-t border-white/10">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="bg-white/10 p-2.5 rounded-xl hover:bg-white/20 active:scale-95 transition-all duration-200"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <div className="transition-transform duration-300">
+              {collapsed ? (
+                <ChevronRight size={18} />
+              ) : (
+                <ChevronLeft size={18} />
+              )}
+            </div>
+          </button>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default function Sidebar({ mobileOpen = false, onClose }) {
+  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+
+  const menu = [
+    { name: "Dashboard", to: "/", icon: LayoutDashboard },
+    { name: "Accounts", to: "/accounts", icon: Building2 },
+    { name: "Contacts", to: "/contacts", icon: Users },
+    { name: "Deals", to: "/deals", icon: IndianRupee },
+    { name: "Tasks", to: "/tasks", icon: CheckSquare },
+    ...(user?.role === "ADMIN"
+      ? [{ name: "Users", to: "/users", icon: Users }]
+      : []),
+  ];
+
+  const isActive = useCallback(
+    (path) => location.pathname === path,
+    [location.pathname]
+  );
+
+  useEffect(() => {
+    onClose?.();
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") onClose?.();
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        onClose?.();
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [onClose]);
+
+  return (
+    <>
+      <div
+        className={`
+          lg:hidden fixed inset-0 z-[48]
+          transition-opacity duration-300 ease-in-out
+          ${
+            mobileOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }
+        `}
+        onClick={onClose}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+      </div>
+
+      <aside
+        className={`
+          lg:hidden fixed top-0 left-0 h-full w-[280px] z-[50]
+          bg-gradient-to-b from-[#3B2E7E] to-[#2A1F5C] text-white
+          flex flex-col shadow-2xl
+          transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+          will-change-transform
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        <SidebarContent
+          menu={menu}
+          isMobile={true}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          onClose={onClose}
+          isActive={isActive}
+        />
+      </aside>
+
+      <aside
+        className={`
+          hidden lg:flex flex-col h-screen
+          bg-gradient-to-b from-[#3B2E7E] to-[#2A1F5C] text-white
+          transition-all duration-300 ease-in-out flex-shrink-0
+          will-change-[width]
+          ${collapsed ? "w-[72px]" : "w-[250px]"}
+        `}
+      >
+        <SidebarContent
+          menu={menu}
+          isMobile={false}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          onClose={onClose}
+          isActive={isActive}
+        />
+      </aside>
+    </>
+  );
+}

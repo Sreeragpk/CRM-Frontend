@@ -212,8 +212,8 @@ import Spinner from "./components/Spinner";
 
 // Auth
 import Login from "./features/auth/Login";
-import Register from "./features/auth/Register";
 import TaskDetail from "./features/tasks/TaskDetail";
+import AdminRoute from "./components/AdminRoute";
 
 // Lazy pages
 const Dashboard = lazy(() => import("./features/dashboard/Dashboard"));
@@ -229,6 +229,8 @@ const DealDetail = lazy(() => import("./features/deals/DealDetail"));
 const DealPipeline = lazy(() => import("./features/deals/DealPipeline"));
 const TaskList = lazy(() => import("./features/tasks/TaskList"));
 const TaskForm = lazy(() => import("./features/tasks/TaskForm"));
+const Users = lazy(() => import("./features/users/Users"));
+const CreateUser = lazy(() => import("./features/users/CreateUser"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center py-20">
@@ -253,16 +255,25 @@ function App() {
   return (
     <>
       {/* ✅ GLOBAL TOASTER */}
-      <Toaster
-        position="bottom-right"
-        toastOptions={{ duration: 3000 }}
-      />
+      <Toaster position="bottom-right" toastOptions={{ duration: 3000 }} />
 
       <Routes>
         {/* Public */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* Users – ADMIN ONLY */}
 
+        {/* <Route
+  path="users/:id"
+  element={
+    <AdminRoute>
+      <Suspense fallback={<PageLoader />}>
+        <EditUser />
+      </Suspense>
+    </AdminRoute>
+  }
+/> */}
+        <Route path="/login" element={<Login />} />
+        
+          
         {/* Protected */}
         <Route
           path="/"
@@ -282,29 +293,181 @@ function App() {
           />
 
           {/* Accounts */}
-          <Route path="accounts" element={<Suspense fallback={<PageLoader />}><AccountList /></Suspense>} />
-          <Route path="accounts/new" element={<Suspense fallback={<PageLoader />}><AccountForm /></Suspense>} />
-          <Route path="accounts/:id" element={<Suspense fallback={<PageLoader />}><AccountDetail /></Suspense>} />
-          <Route path="accounts/:id/edit" element={<Suspense fallback={<PageLoader />}><AccountForm /></Suspense>} />
+          <Route
+            path="accounts"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AccountList />
+              </Suspense>
+            }
+          />
+          <Route
+            path="accounts/new"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AccountForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="accounts/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AccountDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="accounts/:id/edit"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AccountForm />
+              </Suspense>
+            }
+          />
+          {/* USERS – ADMIN ONLY – RIGHT SIDE RENDER */}
+    <Route
+      path="users"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <Users />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
+
+    <Route
+      path="users/create"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <CreateUser />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
+
+    <Route
+      path="users/:id/edit"
+      element={
+        <AdminRoute>
+          <Suspense fallback={<PageLoader />}>
+            <CreateUser />
+          </Suspense>
+        </AdminRoute>
+      }
+    />
 
           {/* Contacts */}
-          <Route path="contacts" element={<Suspense fallback={<PageLoader />}><ContactList /></Suspense>} />
-          <Route path="contacts/new" element={<Suspense fallback={<PageLoader />}><ContactForm /></Suspense>} />
-          <Route path="contacts/:id" element={<Suspense fallback={<PageLoader />}><ContactDetail /></Suspense>} />
-          <Route path="contacts/:id/edit" element={<Suspense fallback={<PageLoader />}><ContactForm /></Suspense>} />
+          <Route
+            path="contacts"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ContactList />
+              </Suspense>
+            }
+          />
+          <Route
+            path="contacts/new"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ContactForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="contacts/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ContactDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="contacts/:id/edit"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ContactForm />
+              </Suspense>
+            }
+          />
 
           {/* Deals */}
-          <Route path="deals" element={<Suspense fallback={<PageLoader />}><DealList /></Suspense>} />
-          <Route path="deals/pipeline" element={<Suspense fallback={<PageLoader />}><DealPipeline /></Suspense>} />
-          <Route path="deals/new" element={<Suspense fallback={<PageLoader />}><DealForm /></Suspense>} />
-          <Route path="deals/:id" element={<Suspense fallback={<PageLoader />}><DealDetail /></Suspense>} />
-          <Route path="deals/:id/edit" element={<Suspense fallback={<PageLoader />}><DealForm /></Suspense>} />
+          <Route
+            path="deals"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DealList />
+              </Suspense>
+            }
+          />
+          <Route
+            path="deals/pipeline"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DealPipeline />
+              </Suspense>
+            }
+          />
+          <Route
+            path="deals/new"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DealForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="deals/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DealDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="deals/:id/edit"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DealForm />
+              </Suspense>
+            }
+          />
 
           {/* Tasks */}
-          <Route path="tasks" element={<Suspense fallback={<PageLoader />}><TaskList /></Suspense>} />
-          <Route path="tasks/new" element={<Suspense fallback={<PageLoader />}><TaskForm /></Suspense>} />
-          <Route path="tasks/:id/edit" element={<Suspense fallback={<PageLoader />}><TaskForm /></Suspense>} />
-          <Route path="tasks/:id" element={<Suspense fallback={<PageLoader />}><TaskDetail /></Suspense>} />
+          <Route
+            path="tasks"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TaskList />
+              </Suspense>
+            }
+          />
+          <Route
+            path="tasks/new"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TaskForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="tasks/:id/edit"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TaskForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="tasks/:id"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TaskDetail />
+              </Suspense>
+            }
+          />
 
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" replace />} />
