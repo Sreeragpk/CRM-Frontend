@@ -23,7 +23,7 @@ import dealReducer from "../features/deals/dealSlice";
 import analyticsReducer from "../features/analytics/analyticsSlice";
 import taskReducer from "../features/tasks/taskSlice";
 import notificationReducer from "../features/notifications/notificationSlice";
-
+import dealRiskReducer from "../features/analytics/dealRiskSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -32,7 +32,8 @@ export const store = configureStore({
     deals: dealReducer,
     analytics: analyticsReducer,
     tasks: taskReducer,
-    notifications: notificationReducer
+    notifications: notificationReducer,
+    dealRisk: dealRiskReducer,
   },
   devTools: import.meta.env.DEV,
 });

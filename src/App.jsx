@@ -214,7 +214,7 @@ import Spinner from "./components/Spinner";
 import Login from "./features/auth/Login";
 import TaskDetail from "./features/tasks/TaskDetail";
 import AdminRoute from "./components/AdminRoute";
-
+import AdvancedAnalytics from "./features/analytics/pages/AdvancedAnalytics";
 // Lazy pages
 const Dashboard = lazy(() => import("./features/dashboard/Dashboard"));
 const AccountList = lazy(() => import("./features/accounts/AccountList"));
@@ -291,7 +291,14 @@ function App() {
               </Suspense>
             }
           />
-
+           <Route
+            path="analytics/advanced"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AdvancedAnalytics />
+              </Suspense>
+            }
+          />
           {/* Accounts */}
           <Route
             path="accounts"

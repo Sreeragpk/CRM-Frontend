@@ -87,6 +87,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  BarChart3,
 } from "lucide-react";
 
 function MenuItem({ item, onNavigate, isMobile = false, collapsed, isActive }) {
@@ -256,6 +257,12 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
     ...(user?.role === "ADMIN"
       ? [{ name: "Users", to: "/users", icon: Users }]
       : []),
+       {
+    name: "Advanced Analytics",
+    to: "/analytics/advanced",
+    icon: BarChart3,
+    badge: "NEW",
+  },
   ];
 
   const isActive = useCallback(
